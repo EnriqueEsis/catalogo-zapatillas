@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0f172a" />
+<meta name="description" content="Catálogo de zapatillas adidas a la venta en Chile — 22 pares disponibles. Consulta por WhatsApp." />
+<title>Catálogo de Zapatillas · Enrique</title>
+<style>
+  :root {
+    --bg: #f4f6f8;
+    --surface: #ffffff;
+    --ink: #0f172a;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --accent: #0f766e;
+    --accent-soft: #ccfbf1;
+    --wa: #25d366;
+    --wa-dark: #128c7e;
+    --price: #0f172a;
+    --chip: #e2e8f0;
+    --chip-on: #0f172a;
+    --shadow: 0 10px 30px rgba(15, 23, 42, .08);
+    --radius: 18px;
+    --safe-b: env(safe-area-inset-bottom, 0px);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+
+  .hero {
+    background: linear-gradient(145deg, #0f172a 0%, #134e4a 55%, #0f766e 100%);
+    color: #fff;
+    padding: 28px 20px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: auto -40px -60px auto;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(255,255,255,.12), transparent 70%);
+    pointer-events: none;
+  }
+  .hero-inner { max-width: 920px; margin: 0 auto; position: relative; z-index: 1; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.2);
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 12px; letter-spacing: .02em; font-weight: 600;
+  }
+  .hero h1 {
+    margin: 14px 0 8px;
+    font-size: clamp(1.7rem, 5vw, 2.35rem);
+    letter-spacing: -.02em;
+    line-height: 1.15;
+  }
+  .hero p { margin: 0; opacity: .9; max-width: 36rem; font-size: 15px; }
+  .hero-stats {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-top: 18px;
+  }
+  .stat {
+    background: rgba(255,255,255,.12);
+    border-radius: 14px;
+    padding: 10px 14px;
+    min-width: 110px;
+  }
+  .stat strong { display: block; font-size: 1.25rem; }
+  .stat span { font-size: 12px; opacity: .85; }
+  .disclaimer {
+    margin-top: 16px;
+    font-size: 12px;
+    opacity: .75;
+  }
+
+  .toolbar {
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(244,246,248,.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+    padding: 12px 16px;
+  }
+  .toolbar-inner { max-width: 920px; margin: 0 auto; }
+  .filters {
+    display: flex; gap: 8px; overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+  .filters::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: 0 0 auto;
+    border: 0;
+    background: var(--chip);
+    color: var(--ink);
+    padding: 9px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .chip.active { background: var(--chip-on); color: #fff; }
+
+  main {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 18px 16px calc(100px + var(--safe-b));
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  @media (min-width: 720px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: 1px solid rgba(226,232,240,.8);
+    display: flex;
+    flex-direction: column;
+  }
+  .card.hidden { display: none; }
+
+  .gallery {
+    position: relative;
+    background: #f8fafc;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+  }
+  .gallery img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    background: #f8fafc;
+  }
+  .thumbs {
+    position: absolute;
+    left: 10px; right: 10px; bottom: 10px;
+    display: flex; gap: 6px; justify-content: center;
+  }
+  .thumbs button {
+    width: 46px; height: 46px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    padding: 0; overflow: hidden;
+    background: #fff;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,.12);
+  }
+  .thumbs button.active { border-color: var(--accent); }
+  .thumbs img { width: 100%; height: 100%; object-fit: cover; }
+
+  .body { padding: 16px 16px 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .model-tag {
+    font-size: 11px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--accent);
+  }
+  .title { margin: 0; font-size: 1.2rem; letter-spacing: -.01em; }
+  .color { margin: 0; color: var(--muted); font-size: 14px; }
+  .meta {
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  }
+  .code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    padding: 4px 8px;
+    color: #334155;
+  }
+  .rating {
+    font-size: 12px; color: var(--muted);
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+
+  .price-row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 10px; margin-top: 2px;
+  }
+  .price {
+    font-size: clamp(1.55rem, 4vw, 1.85rem);
+    font-weight: 800;
+    letter-spacing: -.02em;
+    color: var(--price);
+  }
+  .price small { font-size: .55em; font-weight: 700; margin-right: 2px; }
+  .stock-pill {
+    background: var(--accent-soft);
+    color: #115e59;
+    font-size: 12px; font-weight: 700;
+    padding: 6px 10px; border-radius: 999px;
+  }
+
+  .sizes-label {
+    font-size: 12px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .04em;
+  }
+  .sizes { display: flex; flex-wrap: wrap; gap: 8px; }
+  .size {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 8px 10px;
+    min-width: 92px;
+    background: #fff;
+  }
+  .size strong { display: block; font-size: 14px; }
+  .size span { font-size: 11px; color: var(--muted); }
+
+  .desc {
+    margin: 0;
+    font-size: 13.5px;
+    color: #475569;
+  }
+  .usps {
+    margin: 0; padding: 0; list-style: none;
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .usps li {
+    font-size: 11px; font-weight: 600;
+    background: #f8fafc; border: 1px solid var(--line);
+    padding: 5px 8px; border-radius: 999px; color: #334155;
+  }
+
+  .cta {
+    margin-top: auto;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%;
+    background: var(--wa);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 13px 14px;
+    border-radius: 14px;
+    border: 0;
+    cursor: pointer;
+  }
+  .cta:active { background: var(--wa-dark); }
+  .cta svg { width: 18px; height: 18px; fill: currentColor; }
+
+  .footer-note {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    margin: 22px 8px 0;
+  }
+
+  .fab {
+    position: fixed;
+    left: 16px; right: 16px;
+    bottom: calc(14px + var(--safe-b));
+    z-index: 30;
+    max-width: 920px;
+    margin: 0 auto;
+    display: flex;
+  }
+  .fab a {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--wa);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 14px 16px;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(37, 211, 102, .35);
+  }
+  .fab svg { width: 20px; height: 20px; fill: currentColor; }
+
+  .empty {
+    display: none;
+    text-align: center;
+    padding: 40px 16px;
+    color: var(--muted);
+  }
+
+  .price-breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: var(--bg, #f1f5f9);
+    border: 1px solid rgba(15,23,42,.08);
+  }
+  .price-breakdown .pb {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .price-breakdown .pb span {
+    font-size: .72rem; color: #64748b; text-transform: uppercase; letter-spacing: .04em; font-weight: 600;
+  }
+  .price-breakdown .pb strong {
+    font-size: .95rem; color: #0f172a; font-weight: 700;
+  }
+  .inventory-table { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: .9rem; }
+  .inventory-table th, .inventory-table td { padding: 10px 8px; text-align: left; border-bottom: 1px solid rgba(15,23,42,.08); }
+  .inventory-table th { font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: #64748b; }
+  .inventory-table td.num, .inventory-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .inventory-wrap { overflow-x: auto; margin: 24px 16px 8px; }
+  .inventory-wrap h3 { margin: 0 0 8px; font-size: 1.05rem; }
+
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="badge">Reventa particular · Chile</div>
+    <h1>Catálogo de Zapatillas</h1>
+    <p>Modelos adidas nuevos, listos para entrega. Elige modelo + talla y escribe por WhatsApp.</p>
+    <div class="hero-stats">
+      <div class="stat"><strong>22</strong><span>pares disponibles</span></div>
+      <div class="stat"><strong>7</strong><span>modelos / colores</span></div>
+      <div class="stat"><strong>Pedido</strong><span>ACL91774136</span></div>
+    </div>
+    <p class="disclaimer">Catálogo personal de Enrique · No es tienda oficial adidas. Fotos y fichas técnicas de referencia del modelo.</p>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="toolbar-inner">
+    <div class="filters" role="tablist" aria-label="Filtrar por modelo">
+      <button class="chip active" data-filter="all">Todos</button>
+      <button class="chip" data-filter="Duramo SL 10">Duramo SL 10</button>
+      <button class="chip" data-filter="Switch Move">Switch Move</button>
+      <button class="chip" data-filter="Response">Response</button>
+      <button class="chip" data-filter="Response Super">Response Super</button>
+      <button class="chip" data-filter="Duramo RC2">Duramo RC2</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="grid" id="catalog">
+
+    <!-- HQ4129 -->
+    <article class="card" data-model="Duramo SL 10" data-code="HQ4129">
+      <div class="gallery" data-gallery="HQ4129">
+        <img id="img-HQ4129" src="img/HQ4129_1.jpg" alt="Duramo SL 10 Legend Ink" />
+        <div class="thumbs">
+          <button class="active" data-src="img/HQ4129_1.jpg" aria-label="Foto 1"><img src="img/HQ4129_1.jpg" alt="" /></button>
+          <button data-src="img/HQ4129_2.jpg" aria-label="Foto 2"><img src="img/HQ4129_2.jpg" alt="" /></button>
+          <button data-src="img/HQ4129_3.jpg" aria-label="Foto 3"><img src="img/HQ4129_3.jpg" alt="" /></button>
+        </div>
+      </div>
+      <div class="body">
+        <div class="model-tag">Running · Hombre</div>
+        <h2 class="title">Duramo SL 10</h2>
+        <p class="color">Legend Ink / Better Scarlet / Cloud White</p>
+        <div class="meta">
+          <span class="code">HQ4129</span>
+          <span class="rating">★ 4.7 · modelo adidas</span>
+        </div>
+        <div class="price-row">
+          <div class="price"><small>$</small>59.258</div>
+          <div class="stock-pill">4 pares</div>
+        </div>
+        <div class="price-breakdown">
+          <div class="pb"><span>Precio de envío</span><strong>$14.091</strong></div>
+          <div class="pb"><span>Precio de ganancia</span><strong>$13.675</strong></div>
+        </div>
+        <div>
+          <div class="sizes-label">Tallas disponibles</div>
+          <div class="sizes">
+            <div class="size"><strong>US 10</strong><span>2 unidades</span></div>
+            <div class="size"><strong>US 10.5</strong><span>2 unidades</span></div>
+          </div>
+        </div>
+        <p class="desc">Zapatillas de running para el día a día. Exterior de malla acolchada, amortiguación Lightmotion y suela de caucho.</p>
+        <ul class="usps">
+          <li>Lightmotion</li>
+          <li>Malla transpirable</li>
+          <li>284 g</li>
+        </ul>
+        <button class="cta" type="button" data-wa="Hola! Me interesa Duramo SL 10 (HQ4129). Talla: ">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11 11 0 0 0 2.2 17.2L1 23l5.9-1.5A11 11 0 1 0 20.5 3.5zm-8.5 17a9.1 9.1 0 0 1-4.6-1.3l-.3-.2-3.5.9.9-3.4-.2-.3a9.1 9.1 0 1 1 7.7 4.3zm5-6.8c-.3-.1-1.6-.8-1.8-.9s-.4-.1-.6.1-.7.9-.8 1-.3.2-.6.1a7.4 7.4 0 0 1-2.2-1.4 8.2 8.2 0 0 1-1.5-1.9c-.2-.3 0-.4.1-.6l.4-.5c.1-.2.2-.3.3-.5s0-.4 0-.5-.6-1.4-.8-1.9-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3a2.3 2.3 0 0 0-.7 1.7 4 4 0 0 0 .8 2.1 9.2 9.2 0 0 0 3.5 3.5c.5.3.9.4 1.2.5a2.9 2.9 0 0 0 1.3.1 2.2 2.2 0 0 0 1.4-1 1.8 1.8 0 0 0 .1-1c-.1-.1-.2-.2-.5-.3z"/></svg>
+          Escribe por WhatsApp: modelo + talla
+        </button>
+      </div>
+    </article>
+
+    <!-- ID5253 -->
+    <article class="card" data-model="Switch Move" data-code="ID5253">
+      <div class="gallery" data-gallery="ID5253">
+        <img id="img-ID5253" src="img/ID5253_1.jpg" alt="Switch Move Core Black" />
+        <div class="thumbs">
+          <button class="active" data-src="img/ID5253_1.jpg" aria-label="Foto 1"><img src="img/ID5253_1.jpg" alt="" /></button>
+          <button data-src="img/ID5253_2.jpg" aria-label="Foto 2"><img src="img/ID5253_2.jpg" alt="" /></button>
+          <button data-src="img/ID5253_3.jpg" aria-label="Foto 3"><img src="img/ID5253_3.jpg" alt="" /></button>
+        </div>
+      </div>
+      <div class="body">
+        <div class="model-tag">Running · Unisex · Horma grande</div>
+        <h2 class="title">Switch Move</h2>
+        <p class="color">Core Black / Cloud White / Grey Six</p>
+        <div class="meta">
+          <span class="code">ID5253</span>
+          <span class="rating">★ 4.8 · modelo adidas</span>
+        </div>
+        <div class="price-row">
+          <div class="price"><small>$</small>50.483</div>
+          <div class="stock-pill">2 pares</div>
+        </div>
+        <div class="price-breakdown">
+          <div class="pb"><span>Precio de envío</span><strong>$14.091</strong></div>
+          <div class="pb"><span>Precio de ganancia</span><strong>$11.650</strong></div>
+        </div>
+        <div>
+          <div class="sizes-label">Tallas disponibles</div>
+          <div class="sizes">
+            <div class="size"><strong>US H 9.5 / M 10.5</strong><span>2 unidades</span></div>
+          </div>
+        </div>
+        <p class="desc">Running diario con mediasuela EVA liviana y suela Adiwear. Parte superior con al menos 50% material reciclado. Unisex, horma grande.</p>
+        <ul class="usps">
+          <li>EVA</li>
+          <li>Adiwear</li>
+          <li>~270 g</li>
+        </ul>
+        <button class="cta" type="button" data-wa="Hola! Me interesa Switch Move (ID5253). Talla US H 9.5 / M 10.5. ">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11 11 0 0 0 2.2 17.2L1 23l5.9-1.5A11 11 0 1 0 20.5 3.5zm-8.5 17a9.1 9.1 0 0 1-4.6-1.3l-.3-.2-3.5.9.9-3.4-.2-.3a9.1 9.1 0 1 1 7.7 4.3zm5-6.8c-.3-.1-1.6-.8-1.8-.9s-.4-.1-.6.1-.7.9-.8 1-.3.2-.6.1a7.4 7.4 0 0 1-2.2-1.4 8.2 8.2 0 0 1-1.5-1.9c-.2-.3 0-.4.1-.6l.4-.5c.1-.2.2-.3.3-.5s0-.4 0-.5-.6-1.4-.8-1.9-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3a2.3 2.3 0 0 0-.7 1.7 4 4 0 0 0 .8 2.1 9.2 9.2 0 0 0 3.5 3.5c.5.3.9.4 1.2.5a2.9 2.9 0 0 0 1.3.1 2.2 2.2 0 0 0 1.4-1 1.8 1.8 0 0 0 .1-1c-.1-.1-.2-.2-.5-.3z"/></svg>
+          Escribe por WhatsApp: modelo + talla
+        </button>
+      </div>
+    </article>
+
+    <!-- IH6007 -->
+    <article class="card" data-model="Response" data-code="IH6007">
+      <div class="gallery" data-gallery="IH6007">
+        <img id="img-IH6007" src="img/IH6007_1.jpg" alt="Response Core Black" />
+        <div class="thumbs">
+          <button class="active" data-src="img/IH6007_1.jpg" aria-label="Foto 1"><img src="img/IH6007_1.jpg" alt="" /></button>
+          <button data-src="img/IH6007_2.jpg" aria-label="Foto 2"><img src="img/IH6007_2.jpg" alt="" /></button>
+          <button data-src="img/IH6007_3.jpg" aria-label="Foto 3"><img src="img/IH6007_3.jpg" alt="" /></button>
+        </div>
+      </div>
+      <div class="body">
+        <div class="model-tag">Running · Hombre</div>
+        <h2 class="title">Response</h2>
+        <p class="color">Core Black / Cloud White / Core Black</p>
+        <div class="meta">
+          <span class="code">IH6007</span>
+          <span class="rating">★ 4.7 · modelo adidas</span>
+        </div>
+        <div class="price-row">
+          <div class="price"><small>$</small>55.358</div>
+          <div class="stock-pill">4 pares</div>
+        </div>
+        <div class="price-breakdown">
+          <div class="pb"><span>Precio de envío</span><strong>$14.091</strong></div>
+          <div class="pb"><span>Precio de ganancia</span><strong>$12.775</strong></div>
+        </div>
+        <div>
+          <div class="sizes-label">Tallas disponibles</div>
+          <div class="sizes">
+            <div class="size"><strong>US 10</strong><span>2 unidades</span></div>
+            <div class="size"><strong>US 10.5</strong><span>2 unidades</span></div>
+          </div>
+        </div>
+        <p class="desc">Running cómodo con mediasuela EVA y suela de gran agarre. Versátil para entrenar o el día a día. Parcialmente con materiales reciclados.</p>
+        <ul class="usps">
+          <li>EVA</li>
+          <li>Mesh / Sock</li>
+          <li>327 g</li>
+        </ul>
+        <button class="cta" type="button" data-wa="Hola! Me interesa Response (IH6007). Talla: ">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11 11 0 0 0 2.2 17.2L1 23l5.9-1.5A11 11 0 1 0 20.5 3.5zm-8.5 17a9.1 9.1 0 0 1-4.6-1.3l-.3-.2-3.5.9.9-3.4-.2-.3a9.1 9.1 0 1 1 7.7 4.3zm5-6.8c-.3-.1-1.6-.8-1.8-.9s-.4-.1-.6.1-.7.9-.8 1-.3.2-.6.1a7.4 7.4 0 0 1-2.2-1.4 8.2 8.2 0 0 1-1.5-1.9c-.2-.3 0-.4.1-.6l.4-.5c.1-.2.2-.3.3-.5s0-.4 0-.5-.6-1.4-.8-1.9-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3a2.3 2.3 0 0 0-.7 1.7 4 4 0 0 0 .8 2.1 9.2 9.2 0 0 0 3.5 3.5c.5.3.9.4 1.2.5a2.9 2.9 0 0 0 1.3.1 2.2 2.2 0 0 0 1.4-1 1.8 1.8 0 0 0 .1-1c-.1-.1-.2-.2-.5-.3z"/></svg>
+          Escribe por WhatsApp: modelo + talla
+        </button>
+      </div>
+    </article>
+
+    <!-- JI4308 -->
+    <article class="card" data-model="Response Super" data-code="JI4308">
+      <div class="gallery" data-gallery="JI4308">
+        <img id="img-JI4308" src="img/JI4308_1.jpg" alt="Response Super Core Black" />
+        <div class="thumbs">
+          <button class="active" data-src="img/JI4308_1.jpg" aria-label="Foto 1"><img src="img/JI4308_1.jpg" alt="" /></button>
+          <button data-src="img/JI4308_2.jpg" aria-label="Foto 2"><img src="img/JI4308_2.jpg" alt="" /></button>
+          <button data-src="img/JI4308_3.jpg" aria-label="Foto 3"><img src="img/JI4308_3.jpg" alt="" /></button>
+        </div>
+      </div>
+      <div class="body">
+        <div class="model-tag">Running · Hombre</div>
+        <h2 class="title">Response Super</h2>
+        <p class="color">Core Black / Cloud White / Core Black</p>
+        <div class="meta">
+          <span class="code">JI4308</span>
+          <span class="rating">★ 4.7 · modelo adidas</span>
+        </div>
+        <div class="price-row">
+          <div class="price"><small>$</small>59.258</div>
+          <div class="stock-pill">4 pares</div>
+        </div>
+        <div class="price-breakdown">
+          <div class="pb"><span>Precio de envío</span><strong>$14.091</strong></div>
+          <div class="pb"><span>Precio de ganancia</span><strong>$13.675</strong></div>
+        </div>
+        <div>
+          <div class="sizes-label">Tallas disponibles</div>
+          <div class="sizes">
+            <div class="size"><strong>US 10</strong><span>2 unidades</span></div>
+            <div class="size"><strong>US 10.5</strong><span>2 unidades</span></div>
+          </div>
+        </div>
+        <p class="desc">Amortiguación Dreamstrike+, monomalla transpirable y varillas de caucho en la suela. Ideal para distancia y ritmo diario.</p>
+        <ul class="usps">
+          <li>Dreamstrike+</li>
+          <li>Monomalla</li>
+          <li>320 g</li>
+        </ul>
+        <button class="cta" type="button" data-wa="Hola! Me interesa Response Super negro (JI4308). Talla: ">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11 11 0 0 0 2.2 17.2L1 23l5.9-1.5A11 11 0 1 0 20.5 3.5zm-8.5 17a9.1 9.1 0 0 1-4.6-1.3l-.3-.2-3.5.9.9-3.4-.2-.3a9.1 9.1 0 1 1 7.7 4.3zm5-6.8c-.3-.1-1.6-.8-1.8-.9s-.4-.1-.6.1-.7.9-.8 1-.3.2-.6.1a7.4 7.4 0 0 1-2.2-1.4 8.2 8.2 0 0 1-1.5-1.9c-.2-.3 0-.4.1-.6l.4-.5c.1-.2.2-.3.3-.5s0-.4 0-.5-.6-1.4-.8-1.9-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3a2.3 2.3 0 0 0-.7 1.7 4 4 0 0 0 .8 2.1 9.2 9.2 0 0 0 3.5 3.5c.5.3.9.4 1.2.5a2.9 2.9 0 0 0 1.3.1 2.2 2.2 0 0 0 1.4-1 1.8 1.8 0 0 0 .1-1c-.1-.1-.2-.2-.5-.3z"/></svg>
+          Escribe por WhatsApp: modelo + talla
+        </button>
+      </div>
+    </article>
+
+    <!-- JQ2524 -->
+    <article class="card" data-model="Response Super" data-code="JQ2524">
+      <div class="gallery" data-gallery="JQ2524">
+        <img id="img-JQ2524" src="img/JQ2524_1.jpg" alt="Response Super Preloved Ink" />
+        <div class="thumbs">
+          <button class="active" data-src="img/JQ2524_1.jpg" aria-label="Foto 1"><img src="img/JQ2524_1.jpg" alt="" /></button>
+          <button data-src="img/JQ2524_2.jpg" aria-label="Foto 2"><img src="img/JQ2524_2.jpg" alt="" /></button>
+          <button data-src="img/JQ2524_3.jpg" aria-label="Foto 3"><img src="img/JQ2524_3.jpg" alt="" /></button>
+        </div>
+      </div>
+      <div class="body">
+        <div class="model-tag">Running · Hombre</div>
+        <h2 class="title">Response Super</h2>
+        <p class="color">Preloved Ink / Legend Ink / Lucid Blue</p>
+        <div class="meta">
+          <span class="code">JQ2524</span>
+          <span class="rating">★ 4.7 · modelo adidas</span>
+        </div>
+        <div class="price-row">
+          <div class="price"><small>$</small>66.083</div>
+          <div class="stock-pill">2 pares</div>
+        </div>
+        <div class="price-breakdown">
+          <div class="pb"><span>Precio de envío</span><strong>$14.091</strong></div>
+          <div class="pb"><span>Precio de ganancia</span><strong>$15.250</strong></div>
+        </div>
+        <div>
+          <div class="sizes-label">Tallas disponibles</div>
+          <div class="sizes">
+            <div class="size"><strong>US 10</strong><span>2 unidades</span></div>
+          </div>
+        </div>
+        <p class="desc">Misma plataforma Response Super en colorway azul. Dreamstrike+, monomalla y agarre con varillas de caucho.</p>
+        <ul class="usps">
+          <li>Dreamstrike+</li>
+          <li>Colorway azul</li>
+          <li>320 g</li>
+        </ul>
+        <button class="cta" type="button" data-wa="Hola! Me interesa Response Super azul (JQ2524) talla US 10. ">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11 11 0 0 0 2.2 17.2L1 23l5.9-1.5A11 11 0 1 0 20.5 3.5zm-8.5 17a9.1 9.1 0 0 1-4.6-1.3l-.3-.2-3.5.9.9-3.4-.2-.3a9.1 9.1 0 1 1 7.7 4.3zm5-6.8c-.3-.1-1.6-.8-1.8-.9s-.4-.1-.6.1-.7.9-.8 1-.3.2-.6.1a7.4 7.4 0 0 1-2.2-1.4 8.2 8.2 0 0 1-1.5-1.9c-.2-.3 0-.4.1-.6l.4-.5c.1-.2.2-.3.3-.5s0-.4 0-.5-.6-1.4-.8-1.9-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3a2.3 2.3 0 0 0-.7 1.7 4 4 0 0 0 .8 2.1 9.2 9.2 0 0 0 3.5 3.5c.5.3.9.4 1.2.5a2.9 2.9 0 0 0 1.3.1 2.2 2.2 0 0 0 1.4-1 1.8 1.8 0 0 0 .1-1c-.1-.1-.2-.2-.5-.3z"/></svg>
+          Escribe por WhatsApp: modelo + talla
+        </button>
+      </div>
+    </article>
+
+    <!-- JQ8077 -->
+    <article class="card" data-model="Duramo RC2" data-code="JQ8077">
+      <div class="gallery" data-gallery="JQ8077">
+        <img id="img-JQ8077" src="img/JQ8077_1.jpg" alt="Duramo RC2 Dark Blue" />
+        <div class="thumbs">
+          <button class="active" data-src="img/JQ8077_1.jpg" aria-label="Foto 1"><img src="img/JQ8077_1.jpg" alt="" /></button>
+          <button data-src="img/JQ8077_2.jpg" aria-label="Foto 2"><img src="img/JQ8077_2.jpg" alt="" /></button>
+          <button data-src="img/JQ8077_3.jpg" aria-label="Foto 3"><img src="img/JQ8077_3.jpg" alt="" /></button>
+        </div>
+      </div>
+      <div class="body">
+        <div class="model-tag">Running · Hombre</div>
+        <h2 class="title">Duramo RC2</h2>
+        <p class="color">Dark Blue / Cloud White / Halo Silver</p>
+        <div class="meta">
+          <span class="code">JQ8077</span>
+          <span class="rating">★ 4.6 · modelo adidas</span>
+        </div>
+        <div class="price-row">
+          <div class="price"><small>$</small>51.458</div>
+          <div class="stock-pill">4 pares</div>
+        </div>
+        <div class="price-breakdown">
+          <div class="pb"><span>Precio de envío</span><strong>$14.091</strong></div>
+          <div class="pb"><span>Precio de ganancia</span><strong>$11.875</strong></div>
+        </div>
+        <div>
+          <div class="sizes-label">Tallas disponibles</div>
+          <div class="sizes">
+            <div class="size"><strong>US 10</strong><span>2 unidades</span></div>
+            <div class="size"><strong>US 10.5</strong><span>2 unidades</span></div>
+          </div>
+        </div>
+        <p class="desc">Ligeras para kilómetros diarios. Mediasuela LIGHTMOTION de largo completo, talón acolchado y suela Adiwear.</p>
+        <ul class="usps">
+          <li>LIGHTMOTION</li>
+          <li>Adiwear</li>
+          <li>244 g</li>
+        </ul>
+        <button class="cta" type="button" data-wa="Hola! Me interesa Duramo RC2 azul (JQ8077). Talla: ">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11 11 0 0 0 2.2 17.2L1 23l5.9-1.5A11 11 0 1 0 20.5 3.5zm-8.5 17a9.1 9.1 0 0 1-4.6-1.3l-.3-.2-3.5.9.9-3.4-.2-.3a9.1 9.1 0 1 1 7.7 4.3zm5-6.8c-.3-.1-1.6-.8-1.8-.9s-.4-.1-.6.1-.7.9-.8 1-.3.2-.6.1a7.4 7.4 0 0 1-2.2-1.4 8.2 8.2 0 0 1-1.5-1.9c-.2-.3 0-.4.1-.6l.4-.5c.1-.2.2-.3.3-.5s0-.4 0-.5-.6-1.4-.8-1.9-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3a2.3 2.3 0 0 0-.7 1.7 4 4 0 0 0 .8 2.1 9.2 9.2 0 0 0 3.5 3.5c.5.3.9.4 1.2.5a2.9 2.9 0 0 0 1.3.1 2.2 2.2 0 0 0 1.4-1 1.8 1.8 0 0 0 .1-1c-.1-.1-.2-.2-.5-.3z"/></svg>
+          Escribe por WhatsApp: modelo + talla
+        </button>
+      </div>
+    </article>
+
+    <!-- JR3228 -->
+    <article class="card" data-model="Duramo RC2" data-code="JR3228">
+      <div class="gallery" data-gallery="JR3228">
+        <img id="img-JR3228" src="img/JR3228_1.jpg" alt="Duramo RC2 Lucid Red" />
+        <div class="thumbs">
+          <button class="active" data-src="img/JR3228_1.jpg" aria-label="Foto 1"><img src="img/JR3228_1.jpg" alt="" /></button>
+          <button data-src="img/JR3228_2.jpg" aria-label="Foto 2"><img src="img/JR3228_2.jpg" alt="" /></button>
+          <button data-src="img/JR3228_3.jpg" aria-label="Foto 3"><img src="img/JR3228_3.jpg" alt="" /></button>
+        </div>
+      </div>
+      <div class="body">
+        <div class="model-tag">Running · Hombre</div>
+        <h2 class="title">Duramo RC2</h2>
+        <p class="color">Lucid Red / Zero Metalic / Shock Pink</p>
+        <div class="meta">
+          <span class="code">JR3228</span>
+          <span class="rating">★ 4.6 · modelo adidas</span>
+        </div>
+        <div class="price-row">
+          <div class="price"><small>$</small>51.458</div>
+          <div class="stock-pill">2 pares</div>
+        </div>
+        <div class="price-breakdown">
+          <div class="pb"><span>Precio de envío</span><strong>$14.091</strong></div>
+          <div class="pb"><span>Precio de ganancia</span><strong>$11.875</strong></div>
+        </div>
+        <div>
+          <div class="sizes-label">Tallas disponibles</div>
+          <div class="sizes">
+            <div class="size"><strong>US 10</strong><span>2 unidades</span></div>
+          </div>
+        </div>
+        <p class="desc">Misma Duramo RC2 en colorway rojo/rosa. Livianas, LIGHTMOTION y suela de agarre para pista o calle.</p>
+        <ul class="usps">
+          <li>LIGHTMOTION</li>
+          <li>Colorway rojo</li>
+          <li>244 g</li>
+        </ul>
+        <button class="cta" type="button" data-wa="Hola! Me interesa Duramo RC2 rojo (JR3228) talla US 10. ">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11 11 0 0 0 2.2 17.2L1 23l5.9-1.5A11 11 0 1 0 20.5 3.5zm-8.5 17a9.1 9.1 0 0 1-4.6-1.3l-.3-.2-3.5.9.9-3.4-.2-.3a9.1 9.1 0 1 1 7.7 4.3zm5-6.8c-.3-.1-1.6-.8-1.8-.9s-.4-.1-.6.1-.7.9-.8 1-.3.2-.6.1a7.4 7.4 0 0 1-2.2-1.4 8.2 8.2 0 0 1-1.5-1.9c-.2-.3 0-.4.1-.6l.4-.5c.1-.2.2-.3.3-.5s0-.4 0-.5-.6-1.4-.8-1.9-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3a2.3 2.3 0 0 0-.7 1.7 4 4 0 0 0 .8 2.1 9.2 9.2 0 0 0 3.5 3.5c.5.3.9.4 1.2.5a2.9 2.9 0 0 0 1.3.1 2.2 2.2 0 0 0 1.4-1 1.8 1.8 0 0 0 .1-1c-.1-.1-.2-.2-.5-.3z"/></svg>
+          Escribe por WhatsApp: modelo + talla
+        </button>
+      </div>
+    </article>
+
+  </div>
+
+  <p class="empty" id="empty">No hay productos en este filtro.</p>
+  <p class="footer-note">Precios de venta en CLP (incluyen envío a Venezuela + 30% ganancia) · Stock desde pedido ACL91774136 · Fotos de referencia del modelo adidas correspondiente a cada código.</p>
+
+<section class="inventory-wrap" id="tabla-precios">
+  <h3>Detalle de precios</h3>
+  <table class="inventory-table">
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Modelo</th>
+        <th class="num">Costo adidas</th>
+        <th class="num">Precio de envío</th>
+        <th class="num">Precio de ganancia</th>
+        <th class="num">Precio venta</th>
+        <th class="num">Stock</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>HQ4129</td><td>Duramo Sl 2.0</td><td class="num">$31.492</td><td class="num">$14.091</td><td class="num">$13.675</td><td class="num">$59.258</td><td class="num">4</td></tr>
+      <tr><td>ID5253</td><td>Switch Move</td><td class="num">$24.742</td><td class="num">$14.091</td><td class="num">$11.650</td><td class="num">$50.483</td><td class="num">2</td></tr>
+      <tr><td>IH6007</td><td>Response</td><td class="num">$28.492</td><td class="num">$14.091</td><td class="num">$12.775</td><td class="num">$55.358</td><td class="num">4</td></tr>
+      <tr><td>JI4308</td><td>Response Super negro</td><td class="num">$31.492</td><td class="num">$14.091</td><td class="num">$13.675</td><td class="num">$59.258</td><td class="num">4</td></tr>
+      <tr><td>JQ2524</td><td>Response Super Preloved</td><td class="num">$36.742</td><td class="num">$14.091</td><td class="num">$15.250</td><td class="num">$66.083</td><td class="num">2</td></tr>
+      <tr><td>JQ8077</td><td>Duramo Rc2 Dark Blue</td><td class="num">$25.492</td><td class="num">$14.091</td><td class="num">$11.875</td><td class="num">$51.458</td><td class="num">4</td></tr>
+      <tr><td>JR3228</td><td>Duramo Rc2 Lucid Red</td><td class="num">$25.492</td><td class="num">$14.091</td><td class="num">$11.875</td><td class="num">$51.458</td><td class="num">2</td></tr>
+    </tbody>
+  </table>
+  <p class="footer-note" style="margin-top:8px">Precio venta = costo adidas + precio de envío + precio de ganancia (30%). Envío VE $310.000 ÷ 22 pares = $14.091.</p>
+</section>
+
+</main>
+
+<div class="fab">
+  <a href="#" id="fab-wa">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11 11 0 0 0 2.2 17.2L1 23l5.9-1.5A11 11 0 1 0 20.5 3.5zm-8.5 17a9.1 9.1 0 0 1-4.6-1.3l-.3-.2-3.5.9.9-3.4-.2-.3a9.1 9.1 0 1 1 7.7 4.3zm5-6.8c-.3-.1-1.6-.8-1.8-.9s-.4-.1-.6.1-.7.9-.8 1-.3.2-.6.1a7.4 7.4 0 0 1-2.2-1.4 8.2 8.2 0 0 1-1.5-1.9c-.2-.3 0-.4.1-.6l.4-.5c.1-.2.2-.3.3-.5s0-.4 0-.5-.6-1.4-.8-1.9-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3a2.3 2.3 0 0 0-.7 1.7 4 4 0 0 0 .8 2.1 9.2 9.2 0 0 0 3.5 3.5c.5.3.9.4 1.2.5a2.9 2.9 0 0 0 1.3.1 2.2 2.2 0 0 0 1.4-1 1.8 1.8 0 0 0 .1-1c-.1-.1-.2-.2-.5-.3z"/></svg>
+    Escribe por WhatsApp: modelo + talla
+  </a>
+</div>
+
+<script>
+(function () {
+  // Gallery thumbs
+  document.querySelectorAll('.gallery').forEach(function (gal) {
+    var main = gal.querySelector('img[id]');
+    gal.querySelectorAll('.thumbs button').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        main.src = btn.getAttribute('data-src');
+        gal.querySelectorAll('.thumbs button').forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+      });
+    });
+  });
+
+  // Filters
+  var chips = document.querySelectorAll('.chip');
+  var cards = document.querySelectorAll('.card');
+  var empty = document.getElementById('empty');
+  chips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      chips.forEach(function (c) { c.classList.remove('active'); });
+      chip.classList.add('active');
+      var f = chip.getAttribute('data-filter');
+      var shown = 0;
+      cards.forEach(function (card) {
+        var show = f === 'all' || card.getAttribute('data-model') === f;
+        card.classList.toggle('hidden', !show);
+        if (show) shown++;
+      });
+      empty.style.display = shown ? 'none' : 'block';
+    });
+  });
+
+  // WhatsApp CTA — phone placeholder (no number yet)
+  function openWa(msg) {
+    var text = encodeURIComponent(msg || 'Hola! Quiero consultar por unas zapatillas del catálogo. Modelo + talla:');
+    // Sin número aún: abre WhatsApp Web/App para que el usuario elija contacto o pegue el mensaje
+    var url = 'https://wa.me/?text=' + text;
+    window.open(url, '_blank');
+  }
+  document.querySelectorAll('.cta[data-wa]').forEach(function (btn) {
+    btn.addEventListener('click', function () { openWa(btn.getAttribute('data-wa')); });
+  });
+  document.getElementById('fab-wa').addEventListener('click', function (e) {
+    e.preventDefault();
+    openWa('Hola! Vi el catálogo de zapatillas. Me interesa: (modelo + talla)');
+  });
+})();
+</script>
+</body>
+</html>
